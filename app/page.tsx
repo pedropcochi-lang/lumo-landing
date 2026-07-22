@@ -65,7 +65,13 @@ export default function Home() {
         backgroundColor: "rgba(14,26,20,0.95)", backdropFilter: "blur(12px)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 22, color: C.gold }}>◈</span>
+          <div style={{
+            width: 28, height: 28, borderRadius: 8,
+            border: `1px solid ${C.gold}`,
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
+            <span style={{ fontSize: 14, color: C.gold }}>◈</span>
+          </div>
           <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: 2, color: C.cream }}>lumo</span>
         </div>
         <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
