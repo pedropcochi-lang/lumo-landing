@@ -300,20 +300,7 @@ export default function Home() {
             Um investimento que se paga na primeira semana de clareza financeira.
           </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 40 }}>
-            <div style={{
-              backgroundColor: C.card, borderRadius: 20, padding: 32,
-              border: `1px solid ${C.border}`, textAlign: "center",
-            }}>
-              <p style={{ color: C.secondary, fontSize: 13, fontWeight: 600, letterSpacing: 1, marginBottom: 16 }}>MENSAL</p>
-              <p style={{ fontSize: 40, fontWeight: 700, color: C.cream, marginBottom: 4 }}>R$ 67<span style={{ fontSize: 20 }}>,00</span></p>
-              <p style={{ color: C.muted, fontSize: 13, marginBottom: 24 }}>por mês</p>
-              <a href={KIWIFY} target="_blank" rel="noopener noreferrer" style={{
-                display: "block", backgroundColor: C.greenDark, color: C.cream,
-                padding: "14px", borderRadius: 999, fontSize: 14, fontWeight: 600,
-                textDecoration: "none", border: `1px solid ${C.greenMid}`,
-              }}>Começar agora</a>
-            </div>
+          <div style={{ maxWidth: 360, margin: "0 auto 40px" }}>
             <div style={{
               backgroundColor: C.greenDark, borderRadius: 20, padding: 32,
               border: `1px solid ${C.greenAccent}`, textAlign: "center", position: "relative",
