@@ -318,6 +318,7 @@ export default function Home() {
               }}>MELHOR OPÇÃO</div>
               <p style={{ color: C.greenAccent, fontSize: 13, fontWeight: 600, letterSpacing: 1, marginBottom: 16 }}>ANUAL</p>
               <p style={{ fontSize: 40, fontWeight: 700, color: C.cream, marginBottom: 4 }}>R$ 297<span style={{ fontSize: 20 }}>,00</span></p>
+              <p style={{ color: C.gold, fontSize: 14, fontWeight: 600, marginBottom: 4 }}>equivalente a R$ 24,75/mês</p>
               <p style={{ color: C.muted, fontSize: 13, marginBottom: 24 }}>por ano · economia de R$ 507</p>
               <a href={KIWIFY} target="_blank" rel="noopener noreferrer" style={{
                 display: "block", backgroundColor: C.gold, color: C.bg,
