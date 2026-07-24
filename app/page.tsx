@@ -318,13 +318,8 @@ export default function Home() {
               }}>MELHOR OPÇÃO</div>
               <p style={{ color: C.greenAccent, fontSize: 13, fontWeight: 600, letterSpacing: 1, marginBottom: 16 }}>ANUAL</p>
               <p style={{ fontSize: 40, fontWeight: 700, color: C.cream, marginBottom: 4 }}>R$ 297<span style={{ fontSize: 20 }}>,00</span></p>
-              <p style={{ color: C.gold, fontSize: 14, fontWeight: 600, marginBottom: 2 }}>equivalente a R$ 24,75/mês</p>
-              <p style={{ color: C.muted, fontSize: 13, marginBottom: 14 }}>cobrado uma vez por ano</p>
-              <div style={{
-                display: "inline-block", backgroundColor: "rgba(212,168,67,0.12)",
-                border: `1px solid ${C.gold}`, color: C.gold, fontSize: 12, fontWeight: 700,
-                padding: "5px 14px", borderRadius: 999, marginBottom: 24,
-              }}>Você economiza R$ 507 no ano</div>
+              <p style={{ color: C.muted, fontSize: 13, marginBottom: 10 }}>cobrado uma vez por ano</p>
+              <p style={{ color: C.gold, fontSize: 14, fontWeight: 600, marginBottom: 24 }}>equivalente a R$ 24,75/mês</p>
               <a href={KIWIFY} target="_blank" rel="noopener noreferrer" style={{
                 display: "block", backgroundColor: C.gold, color: C.bg,
                 padding: "14px", borderRadius: 999, fontSize: 14, fontWeight: 700,
