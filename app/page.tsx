@@ -78,12 +78,17 @@ export default function Home() {
           <a href="#agentes" style={{ color: C.secondary, fontSize: 14, textDecoration: "none" }}>Agentes</a>
           <a href="#preco" style={{ color: C.secondary, fontSize: 14, textDecoration: "none" }}>Preço</a>
         </div>
-        <a href={KIWIFY} target="_blank" rel="noopener noreferrer" style={{
-          backgroundColor: C.cream, color: C.bg, padding: "10px 24px",
-          borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none",
-        }}>
-          Começar agora
-        </a>
+        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+          <a href="https://app.lumoapp.site/auth/login" style={{ color: C.secondary, fontSize: 14, textDecoration: "none" }}>
+            Já tenho conta — Entrar
+          </a>
+          <a href={KIWIFY} target="_blank" rel="noopener noreferrer" style={{
+            backgroundColor: C.cream, color: C.bg, padding: "10px 24px",
+            borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none",
+          }}>
+            Começar agora
+          </a>
+        </div>
       </nav>
 
       {/* ── HERO ── */}
