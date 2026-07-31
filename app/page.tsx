@@ -16,7 +16,12 @@ const C = {
   goldBorder: "rgba(201,169,110,0.3)",
 };
 
+// Checkout Kiwify — plano anual (já em produção)
 const KIWIFY = "https://pay.kiwify.com.br/XdNIOxH";
+// TODO: substituir pelo link de checkout Kiwify do plano MENSAL (R$67/mês) assim
+// que for criado no painel da Kiwify. Até lá aponta pro mesmo checkout anual
+// pra não quebrar o botão.
+const KIWIFY_MENSAL = KIWIFY;
 
 const playfair: React.CSSProperties = { fontFamily: "'Playfair Display', serif" };
 
@@ -26,19 +31,32 @@ const TICKER_ITEMS = [
   "ANÁLISE DE GASTOS", "PLANEJAMENTO DIÁRIO", "CONTROLE FINANCEIRO", "METAS COM PRAZO",
 ];
 
-export default function Home() {
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
+const COMO_FUNCIONA = [
+  { n: "01", icon: "📲", title: "Baixe o app", desc: "Crie sua conta e comece o trial de 7 dias — sem burocracia." },
+  { n: "02", icon: "🔗", title: "Conecte sua rotina", desc: "Adicione seus hábitos, metas e gastos em minutos." },
+  { n: "03", icon: "✦", title: "Receba acompanhamento diário", desc: "ROTA, FLUXO e ALVO te ajudam a evoluir todo dia, com base nos seus dados reais." },
+];
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!email.trim()) return;
-    setLoading(true);
-    await new Promise(r => setTimeout(r, 800));
-    setSubmitted(true);
-    setLoading(false);
-  }
+const ANTES_DEPOIS = [
+  { area: "Rotina", antes: "Inconsistente", depois: "Sob controle" },
+  { area: "Finanças", antes: "Vazando", depois: "Rastreadas" },
+  { area: "Metas", antes: "Só no papel", depois: "Com plano e prazo" },
+];
+
+const FAQ = [
+  { q: "Como funciona o trial de 7 dias?", a: "Você cria sua conta e usa o Lumo completo (hábitos, metas, finanças e os 3 agentes de IA) por 7 dias, sem pagar nada. Só depois desse período a cobrança do plano escolhido começa a valer." },
+  { q: "Preciso colocar cartão de crédito para testar?", a: "O cadastro do meio de pagamento é feito no início pra garantir a continuidade do acesso após o trial, mas você não é cobrado nesses 7 dias — e pode cancelar antes que a cobrança aconteça." },
+  { q: "Posso cancelar quando quiser?", a: "Sim. Não tem fidelidade nem multa — você cancela direto pelo painel quando quiser, sem precisar justificar." },
+  { q: "O app funciona em Android e iOS?", a: "Sim, o Lumo funciona nos dois sistemas, além de também poder ser acessado pelo navegador." },
+  { q: "Preciso saber programar ou configurar algo manualmente?", a: "Não. O app é pronto pra usar — você só cria sua conta, adiciona seus hábitos/metas/gastos e já começa a receber o acompanhamento dos agentes." },
+  { q: "Como funciona o reembolso?", a: "Como você já testa tudo grátis por 7 dias antes de qualquer cobrança, não corre risco. Em caso de problema após a cobrança, é só falar com o suporte." },
+];
+
+export default function Home() {
+  const [ciclo, setCiclo] = useState<"mensal" | "anual">("anual");
+  const [faqAberta, setFaqAberta] = useState<number | null>(null);
+
+  const linkPlanoAtivo = ciclo === "anual" ? KIWIFY : KIWIFY_MENSAL;
 
   return (
     <main style={{ backgroundColor: C.bg, color: C.cream, fontFamily: "'Inter', sans-serif" }}>
@@ -142,19 +160,28 @@ export default function Home() {
 
         <p style={{
           fontSize: "clamp(16px, 2vw, 20px)", color: C.secondary,
-          lineHeight: 1.7, marginBottom: 48, maxWidth: 560,
+          lineHeight: 1.7, marginBottom: 32, maxWidth: 560,
         }}>
           Hábitos, metas e finanças em um só lugar — com agentes de IA que analisam seu progresso e te ajudam a evoluir todo dia.
         </p>
+
+        <div style={{
+          display: "inline-flex", alignItems: "center", gap: 8,
+          backgroundColor: `${C.greenAccent}22`, border: `1px solid ${C.greenAccent}`,
+          borderRadius: 999, padding: "8px 18px", marginBottom: 24,
+        }}>
+          <span style={{ color: C.greenAccent, fontSize: 13 }}>✓</span>
+          <span style={{ fontSize: 13, color: C.cream, fontWeight: 600 }}>7 dias grátis para testar</span>
+        </div>
 
         <a href={KIWIFY} target="_blank" rel="noopener noreferrer" style={{
           backgroundColor: C.gold, color: C.bg, padding: "18px 48px",
           borderRadius: 999, fontSize: 18, fontWeight: 700, textDecoration: "none",
           display: "inline-block", marginBottom: 16,
         }}>
-          Começar agora →
+          Testar grátis por 7 dias →
         </a>
-        <p style={{ fontSize: 13, color: C.muted }}>Acesso imediato · Cancele quando quiser</p>
+        <p style={{ fontSize: 13, color: C.muted }}>7 dias grátis, depois cobrança automática · Cancele quando quiser</p>
       </section>
 
       {/* ── TICKER ── */}
@@ -217,14 +244,24 @@ export default function Home() {
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
             {[
-              { icon: "🔥", title: "Hábitos com streak", desc: "Check-in diário, sequências, XP e gamificação que te mantém motivado mesmo nos dias difíceis." },
-              { icon: "🎯", title: "Metas com plano", desc: "Defina objetivos financeiros ou pessoais. O app calcula o caminho e acompanha cada passo." },
-              { icon: "💵", title: "Finanças rastreadas", desc: "Registre entradas e saídas, veja para onde seu dinheiro vai e tome decisões melhores." },
+              { icon: "🔥", title: "Hábitos com streak", desc: "Check-in diário, sequências, XP e gamificação que te mantém motivado mesmo nos dias difíceis.", mockup: "TODO: mockup da tela de Hábitos com streak ativo" },
+              { icon: "🎯", title: "Metas com plano", desc: "Defina objetivos financeiros ou pessoais. O app calcula o caminho e acompanha cada passo.", mockup: "TODO: mockup da tela de Metas com progresso em %" },
+              { icon: "💵", title: "Finanças rastreadas", desc: "Registre entradas e saídas, veja para onde seu dinheiro vai e tome decisões melhores.", mockup: "TODO: mockup da tela de Finanças com resumo do mês" },
             ].map(f => (
               <div key={f.title} style={{
                 backgroundColor: C.card, borderRadius: 20,
                 padding: 32, border: `1px solid ${C.border}`,
               }}>
+                {/* Slot reservado pra print real da tela do app — troca este bloco
+                    pela imagem quando o mockup estiver pronto */}
+                <div style={{
+                  aspectRatio: "16 / 10", borderRadius: 14, marginBottom: 20,
+                  border: `1px dashed ${C.border}`, backgroundColor: C.cardAlt,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  padding: 16, textAlign: "center",
+                }}>
+                  <span style={{ color: C.muted, fontSize: 12, lineHeight: 1.5 }}>{f.mockup}</span>
+                </div>
                 <span style={{ fontSize: 36, display: "block", marginBottom: 16 }}>{f.icon}</span>
                 <h3 style={{ fontSize: 20, fontWeight: 700, color: C.cream, marginBottom: 12 }}>{f.title}</h3>
                 <p style={{ color: C.secondary, lineHeight: 1.7, fontSize: 15 }}>{f.desc}</p>
@@ -286,13 +323,75 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── ANTES × COM LUMO ── */}
+      <section style={{ padding: "100px 24px", borderTop: `1px solid ${C.border}` }}>
+        <div style={{ maxWidth: 700, margin: "0 auto" }}>
+          <p style={{ color: C.gold, fontSize: 12, fontWeight: 600, letterSpacing: 2, textAlign: "center", marginBottom: 16 }}>✦ A TRANSFORMAÇÃO</p>
+          <h2 style={{ ...playfair, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, textAlign: "center", marginBottom: 56 }}>
+            Antes <span style={{ color: C.muted, fontWeight: 400 }}>×</span>{" "}
+            <em style={{ color: C.gold, fontStyle: "italic" }}>Com Lumo</em>
+          </h2>
+          <div style={{
+            border: `1px solid ${C.border}`, borderRadius: 20, overflow: "hidden",
+            backgroundColor: C.card,
+          }}>
+            <div style={{
+              display: "grid", gridTemplateColumns: "1fr 1fr 1fr",
+              padding: "16px 24px", borderBottom: `1px solid ${C.border}`,
+            }}>
+              <span style={{ color: C.muted, fontSize: 12, fontWeight: 700, letterSpacing: 1 }}>ÁREA</span>
+              <span style={{ color: C.muted, fontSize: 12, fontWeight: 700, letterSpacing: 1, textAlign: "center" }}>ANTES</span>
+              <span style={{ color: C.gold, fontSize: 12, fontWeight: 700, letterSpacing: 1, textAlign: "center" }}>COM LUMO</span>
+            </div>
+            {ANTES_DEPOIS.map((row, i) => (
+              <div key={row.area} style={{
+                display: "grid", gridTemplateColumns: "1fr 1fr 1fr",
+                padding: "20px 24px", alignItems: "center",
+                borderBottom: i < ANTES_DEPOIS.length - 1 ? `1px solid ${C.border}` : "none",
+              }}>
+                <span style={{ color: C.cream, fontSize: 15, fontWeight: 600 }}>{row.area}</span>
+                <span style={{ color: C.secondary, fontSize: 14, textAlign: "center" }}>{row.antes}</span>
+                <span style={{ color: C.greenAccent, fontSize: 14, fontWeight: 600, textAlign: "center" }}>{row.depois}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── COMO FUNCIONA ── */}
+      <section style={{ padding: "100px 24px", borderTop: `1px solid ${C.border}` }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+          <p style={{ color: C.gold, fontSize: 12, fontWeight: 600, letterSpacing: 2, textAlign: "center", marginBottom: 16 }}>✦ COMO FUNCIONA</p>
+          <h2 style={{ ...playfair, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, textAlign: "center", marginBottom: 64 }}>
+            Três passos até sua{" "}
+            <em style={{ color: C.gold, fontStyle: "italic" }}>nova rotina</em>
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 24 }}>
+            {COMO_FUNCIONA.map(p => (
+              <div key={p.n} style={{
+                backgroundColor: C.card, borderRadius: 20, padding: 32,
+                border: `1px solid ${C.border}`, textAlign: "center",
+              }}>
+                <p style={{ color: C.gold, fontSize: 13, fontWeight: 700, letterSpacing: 2, marginBottom: 12 }}>{p.n}</p>
+                <span style={{ fontSize: 32, display: "block", marginBottom: 16 }}>{p.icon}</span>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: C.cream, marginBottom: 10 }}>{p.title}</h3>
+                <p style={{ color: C.secondary, fontSize: 14, lineHeight: 1.7 }}>{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── DEPOIMENTOS ── */}
       <section style={{ padding: "100px 24px", borderTop: `1px solid ${C.border}` }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <p style={{ color: C.gold, fontSize: 12, fontWeight: 600, letterSpacing: 2, textAlign: "center", marginBottom: 16 }}>✦ RESULTADOS</p>
-          <h2 style={{ ...playfair, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, textAlign: "center", marginBottom: 64 }}>
+          <h2 style={{ ...playfair, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, textAlign: "center", marginBottom: 16 }}>
             Quem já está na jornada
           </h2>
+          {/* TODO: número agregado de usuários (ex: "+1.200 pessoas evoluindo com o Lumo")
+              — adicionar aqui quando houver um número real pra mostrar */}
+          <p style={{ textAlign: "center", marginBottom: 48 }} />
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
             {[
               { nome: "Ana R.", cargo: "Designer, 28 anos", texto: "Finalmente um app que não abandono depois de uma semana. O ROTA me lembra dos hábitos de um jeito que faz sentido." },
@@ -305,9 +404,19 @@ export default function Home() {
               }}>
                 <p style={{ color: C.gold, fontSize: 24, marginBottom: 16 }}>"</p>
                 <p style={{ color: C.secondary, fontSize: 15, lineHeight: 1.7, marginBottom: 20 }}>{d.texto}</p>
-                <div>
-                  <p style={{ color: C.cream, fontWeight: 600, fontSize: 14 }}>{d.nome}</p>
-                  <p style={{ color: C.muted, fontSize: 12 }}>{d.cargo}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{
+                    width: 36, height: 36, borderRadius: "50%",
+                    backgroundColor: C.cardAlt, border: `1px solid ${C.goldBorder}`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    flexShrink: 0,
+                  }}>
+                    <span style={{ color: C.gold, fontSize: 13, fontWeight: 700 }}>{d.nome.charAt(0)}</span>
+                  </div>
+                  <div>
+                    <p style={{ color: C.cream, fontWeight: 600, fontSize: 14 }}>{d.nome}</p>
+                    <p style={{ color: C.muted, fontSize: 12 }}>{d.cargo}</p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -325,35 +434,129 @@ export default function Home() {
           <h2 style={{ ...playfair, fontSize: "clamp(28px, 4vw, 52px)", fontWeight: 700, marginBottom: 16 }}>
             Menos que um café por dia
           </h2>
-          <p style={{ color: C.secondary, fontSize: 18, lineHeight: 1.7, marginBottom: 48 }}>
-            Um investimento que se paga na primeira semana de clareza financeira.
+          <p style={{ color: C.secondary, fontSize: 18, lineHeight: 1.7, marginBottom: 16 }}>
+            7 dias grátis antes da primeira cobrança — nos dois planos.
           </p>
+
+          {/* Toggle Mensal / Anual */}
+          <div style={{
+            display: "inline-flex", backgroundColor: C.card, borderRadius: 999,
+            padding: 4, border: `1px solid ${C.border}`, marginBottom: 40,
+          }}>
+            <button
+              onClick={() => setCiclo("mensal")}
+              style={{
+                padding: "10px 22px", borderRadius: 999, border: "none", cursor: "pointer",
+                fontSize: 14, fontWeight: 600,
+                backgroundColor: ciclo === "mensal" ? C.gold : "transparent",
+                color: ciclo === "mensal" ? C.bg : C.secondary,
+              }}
+            >
+              Mensal
+            </button>
+            <button
+              onClick={() => setCiclo("anual")}
+              style={{
+                padding: "10px 22px", borderRadius: 999, border: "none", cursor: "pointer",
+                fontSize: 14, fontWeight: 600,
+                backgroundColor: ciclo === "anual" ? C.gold : "transparent",
+                color: ciclo === "anual" ? C.bg : C.secondary,
+              }}
+            >
+              Anual · economize 63%
+            </button>
+          </div>
 
           <div style={{ maxWidth: 360, margin: "0 auto 40px" }}>
             <div style={{
               backgroundColor: C.greenDark, borderRadius: 20, padding: 32,
               border: `1px solid ${C.greenAccent}`, textAlign: "center", position: "relative",
             }}>
-              <div style={{
-                position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)",
-                backgroundColor: C.gold, color: C.bg, fontSize: 11, fontWeight: 700,
-                padding: "4px 14px", borderRadius: 999, letterSpacing: 1, whiteSpace: "nowrap",
-              }}>MELHOR OPÇÃO</div>
-              <p style={{ color: C.greenAccent, fontSize: 13, fontWeight: 600, letterSpacing: 1, marginBottom: 16 }}>ANUAL</p>
-              <p style={{ fontSize: 40, fontWeight: 700, color: C.cream, marginBottom: 4 }}>R$ 297<span style={{ fontSize: 20 }}>,00</span></p>
-              <p style={{ color: C.muted, fontSize: 13, marginBottom: 10 }}>cobrado uma vez por ano</p>
-              <p style={{ color: C.gold, fontSize: 14, fontWeight: 600, marginBottom: 24 }}>equivalente a R$ 24,75/mês</p>
-              <a href={KIWIFY} target="_blank" rel="noopener noreferrer" style={{
+              {ciclo === "anual" && (
+                <div style={{
+                  position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)",
+                  backgroundColor: C.gold, color: C.bg, fontSize: 11, fontWeight: 700,
+                  padding: "4px 14px", borderRadius: 999, letterSpacing: 1, whiteSpace: "nowrap",
+                }}>MELHOR OPÇÃO</div>
+              )}
+              <p style={{ color: C.greenAccent, fontSize: 13, fontWeight: 600, letterSpacing: 1, marginBottom: 16 }}>
+                {ciclo === "anual" ? "ANUAL" : "MENSAL"}
+              </p>
+              {ciclo === "anual" ? (
+                <>
+                  <p style={{ fontSize: 40, fontWeight: 700, color: C.cream, marginBottom: 4 }}>R$ 297<span style={{ fontSize: 20 }}>,00</span></p>
+                  <p style={{ color: C.muted, fontSize: 13, marginBottom: 10 }}>cobrado uma vez por ano</p>
+                  <p style={{ color: C.gold, fontSize: 14, fontWeight: 600, marginBottom: 4 }}>equivalente a R$ 24,75/mês</p>
+                  <p style={{ color: C.greenAccent, fontSize: 13, fontWeight: 600, marginBottom: 24 }}>economize R$ 507 vs. o mensal</p>
+                </>
+              ) : (
+                <>
+                  <p style={{ fontSize: 40, fontWeight: 700, color: C.cream, marginBottom: 4 }}>R$ 67<span style={{ fontSize: 20 }}>,00</span></p>
+                  <p style={{ color: C.muted, fontSize: 13, marginBottom: 24 }}>cobrado todo mês · cancele quando quiser</p>
+                </>
+              )}
+              <a href={linkPlanoAtivo} target="_blank" rel="noopener noreferrer" style={{
                 display: "block", backgroundColor: C.gold, color: C.bg,
                 padding: "14px", borderRadius: 999, fontSize: 14, fontWeight: 700,
                 textDecoration: "none",
-              }}>Começar agora</a>
+              }}>Garantir meu acesso</a>
             </div>
           </div>
 
-          <p style={{ color: C.secondary, fontSize: 14 }}>
+          <p style={{ color: C.secondary, fontSize: 14, marginBottom: 64 }}>
             ✓ Acesso completo · ✓ 3 agentes de IA · ✓ Sem limite de hábitos e metas
           </p>
+
+          {/* ── GARANTIA ── */}
+          <div style={{
+            display: "flex", flexDirection: "column", alignItems: "center", gap: 16,
+            maxWidth: 480, margin: "0 auto", padding: "32px 28px",
+            backgroundColor: C.card, border: `1px solid ${C.goldBorder}`, borderRadius: 20,
+          }}>
+            <span style={{ fontSize: 32 }}>🛡️</span>
+            <p style={{ ...playfair, fontSize: 20, fontWeight: 700, color: C.cream }}>Risco zero pra você</p>
+            <p style={{ color: C.secondary, fontSize: 14, lineHeight: 1.7 }}>
+              7 dias grátis pra testar tudo antes de decidir. Sem burocracia, sem perguntas — se não for pra você, é só cancelar.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section style={{ padding: "100px 24px", borderTop: `1px solid ${C.border}` }}>
+        <div style={{ maxWidth: 720, margin: "0 auto" }}>
+          <p style={{ color: C.gold, fontSize: 12, fontWeight: 600, letterSpacing: 2, textAlign: "center", marginBottom: 16 }}>✦ DÚVIDAS</p>
+          <h2 style={{ ...playfair, fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 700, textAlign: "center", marginBottom: 56 }}>
+            Perguntas frequentes
+          </h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {FAQ.map((item, i) => {
+              const aberta = faqAberta === i;
+              return (
+                <div key={item.q} style={{
+                  backgroundColor: C.card, border: `1px solid ${C.border}`,
+                  borderRadius: 14, overflow: "hidden",
+                }}>
+                  <button
+                    onClick={() => setFaqAberta(aberta ? null : i)}
+                    style={{
+                      width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
+                      padding: "18px 22px", background: "none", border: "none", cursor: "pointer",
+                      textAlign: "left",
+                    }}
+                  >
+                    <span style={{ color: C.cream, fontSize: 15, fontWeight: 600 }}>{item.q}</span>
+                    <span style={{ color: C.gold, fontSize: 18, flexShrink: 0, marginLeft: 12 }}>{aberta ? "−" : "+"}</span>
+                  </button>
+                  {aberta && (
+                    <p style={{ color: C.secondary, fontSize: 14, lineHeight: 1.7, padding: "0 22px 20px" }}>
+                      {item.a}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -365,17 +568,17 @@ export default function Home() {
             Sua melhor versão começa{" "}
             <em style={{ color: C.gold, fontStyle: "italic" }}>agora</em>
           </h2>
-          <p style={{ color: C.secondary, fontSize: 18, lineHeight: 1.7, marginBottom: 48 }}>
-            Acesso imediato. Comece a construir sua rotina hoje.
+          <p style={{ color: C.secondary, fontSize: 18, lineHeight: 1.7, marginBottom: 32 }}>
+            7 dias grátis. Comece a construir sua rotina hoje.
           </p>
           <a href={KIWIFY} target="_blank" rel="noopener noreferrer" style={{
             display: "inline-block", backgroundColor: C.gold, color: C.bg,
             padding: "18px 48px", borderRadius: 999, fontSize: 16, fontWeight: 700,
             textDecoration: "none", marginBottom: 16,
           }}>
-            Começar agora →
+            Começar minha jornada agora →
           </a>
-          <p style={{ color: C.muted, fontSize: 13 }}>Acesso imediato · Cancele quando quiser</p>
+          <p style={{ color: C.muted, fontSize: 13 }}>7 dias grátis, depois cobrança automática · Cancele quando quiser</p>
         </div>
       </section>
 
