@@ -55,16 +55,27 @@ export default function Home() {
           animation: ticker 30s linear infinite;
         }
         .ticker-track:hover { animation-play-state: paused; }
+
+        /* Nav responsiva: em telas pequenas some com os links secundários
+           e encolhe o padding, senão a nav quebrava/estourava a largura */
+        @media (max-width: 640px) {
+          .lumo-nav { padding: 14px 16px !important; }
+          .lumo-nav-links { display: none !important; }
+          .lumo-nav-login-text { display: none !important; }
+          .lumo-nav-login-icon { display: inline-flex !important; }
+          .lumo-nav-cta { padding: 8px 16px !important; font-size: 13px !important; }
+        }
       `}</style>
 
       {/* ── NAV ── */}
-      <nav style={{
+      <nav className="lumo-nav" style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "20px 40px", borderBottom: `1px solid ${C.border}`,
         position: "sticky", top: 0, zIndex: 50,
         backgroundColor: "rgba(14,26,20,0.95)", backdropFilter: "blur(12px)",
+        gap: 12,
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
           <div style={{
             width: 28, height: 28, borderRadius: 8,
             border: `1px solid ${C.gold}`,
@@ -74,17 +85,24 @@ export default function Home() {
           </div>
           <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: 2, color: C.cream }}>lumo</span>
         </div>
-        <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
+        <div className="lumo-nav-links" style={{ display: "flex", gap: 32, alignItems: "center" }}>
           <a href="#agentes" style={{ color: C.secondary, fontSize: 14, textDecoration: "none" }}>Agentes</a>
           <a href="#preco" style={{ color: C.secondary, fontSize: 14, textDecoration: "none" }}>Preço</a>
         </div>
-        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-          <a href="https://app.lumoapp.site/auth/login" style={{ color: C.secondary, fontSize: 14, textDecoration: "none" }}>
+        <div style={{ display: "flex", gap: 16, alignItems: "center", flexShrink: 0 }}>
+          <a href="https://app.lumoapp.site/auth/login" className="lumo-nav-login-text" style={{ color: C.secondary, fontSize: 14, textDecoration: "none", whiteSpace: "nowrap" }}>
             Já tenho conta — Entrar
           </a>
-          <a href={KIWIFY} target="_blank" rel="noopener noreferrer" style={{
+          <a href="https://app.lumoapp.site/auth/login" className="lumo-nav-login-icon" aria-label="Entrar" style={{
+            display: "none", color: C.secondary, fontSize: 13, textDecoration: "none",
+            border: `1px solid ${C.border}`, borderRadius: 999, padding: "8px 14px",
+          }}>
+            Entrar
+          </a>
+          <a href={KIWIFY} target="_blank" rel="noopener noreferrer" className="lumo-nav-cta" style={{
             backgroundColor: C.cream, color: C.bg, padding: "10px 24px",
             borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none",
+            whiteSpace: "nowrap",
           }}>
             Começar agora
           </a>
