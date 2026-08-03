@@ -18,10 +18,8 @@ const C = {
 
 // Checkout Kiwify — plano anual (já em produção)
 const KIWIFY = "https://pay.kiwify.com.br/XdNIOxH";
-// TODO: substituir pelo link de checkout Kiwify do plano MENSAL (R$67/mês) assim
-// que for criado no painel da Kiwify. Até lá aponta pro mesmo checkout anual
-// pra não quebrar o botão.
-const KIWIFY_MENSAL = KIWIFY;
+// Checkout Kiwify — plano mensal (R$67/mês)
+const KIWIFY_MENSAL = "https://pay.kiwify.com.br/4j8cvDT";
 
 const playfair: React.CSSProperties = { fontFamily: "'Playfair Display', serif" };
 
